@@ -1,4 +1,4 @@
 gossip
 ======
 
-Not to be confused with the gossip protocol
+Not to be confused with the gossip protocol.
