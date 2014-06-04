@@ -1,5 +1,12 @@
 package main
 
+import (
+	"encoding/json"
+	// "fmt"
+	"log"
+	// "reflect"
+)
+
 type hub struct {
 	// Registered connections.
 	connections map[*connection]bool
@@ -12,6 +19,12 @@ type hub struct {
 
 	// Unregister requests from connections.
 	unregister chan *connection
+}
+
+type message struct {
+	Name  string
+	Color string
+	Text  string
 }
 
 var h = hub{
@@ -30,6 +43,16 @@ func (h *hub) run() {
 			delete(h.connections, c)
 			close(c.send)
 		case m := <-h.broadcast:
+			var mesg message
+			err := json.Unmarshal(m, &mesg)
+
+			if err != nil {
+				log.Fatal("Run:", err)
+			}
+
+			// fmt.Println(reflect.TypeOf(m))
+			// fmt.Println(mesg)
+
 			for c := range h.connections {
 				select {
 				case c.send <- m:
